@@ -34,10 +34,10 @@ module Idrop
       puts "Logging to #{@logpath}"
       while keepalive? do
         movies.each do |movie|
-          if movie.valid? && movie.ready_for_upload?
+          if movie.valid?
             begin
-              @log.info "Movie appears to be valid and ready for upload."
-              block.call(movie) == true
+              @log.info "Movie appears."
+              block.call(movie)
             rescue => e
               @log.warn "Upload Error!"
               @log.error e.message

@@ -9,7 +9,6 @@ module Idrop
     option :destination, :required => true, :aliases => ['-d'],
       :banner => "you@hostname:/path/to/itunes",
       :desc => "Username and path to put processed files. Be sure to copy your public key."
-
     def watch
       require 'idrop/app'
       source = options[:source] || Dir.pwd

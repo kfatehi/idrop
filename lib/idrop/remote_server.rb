@@ -1,3 +1,4 @@
+require 'net/scp'
 module Idrop
   module RemoteServer
     module SSH
@@ -11,7 +12,7 @@ module Idrop
       rescue => ex
         @log.error ex.message
         @log.error ex.backtrace.join("\n")
-        @log.error "Unable to connect to #{@hostname} using #{@username}"
+        @log.error "Unable to connect to #{@hostname} as #{@username}"
       ensure
         ssh.close
       end
