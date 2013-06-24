@@ -1,5 +1,7 @@
 # Idrop
 
+*this is a work in progress*
+
 watch folder -> [ mkv -> mp4 ] -> scp -> destination
 
 ## Installation
