@@ -16,7 +16,7 @@ module Idrop
       def perform(movie)
         @dir = File.dirname(movie.filepath)
         inspect movie.filepath
-        # extract movie.filepath
+        extract movie.filepath
         @pending_delete = movie.filepath.clone
         movie.filename = movie.filename.gsub('.mkv', '.mp4')
         movie.filepath = File.join(@dir, movie.filename)
