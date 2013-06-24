@@ -2,13 +2,16 @@ require 'logger'
 
 module Idrop
   class Watcher
+    FILE_EXTENSIONS = 'mkv'
     attr_reader :log
     def initialize(target)
-      FileUtils.mkdir_p(@data_dir = File.join((@watch_folder = target), "watcher"))
+      @watch_folder = File.expand_path(target)
+      FileUtils.mkdir_p(@data_dir = File.join(@watch_folder, "watcher"))
       FileUtils.mkdir_p(log_dir = File.join(@data_dir, 'log'))
       @keepalive_file = FileUtils.touch(File.join(@data_dir, 'keepalive'))[0]
-      @log = Logger.new(File.join(log_dir, 'watcher.log'), 'daily')
-      @log.info "Watcher initialized with target directory: #{target}"
+      @logpath = File.join(log_dir, 'watcher.log')
+      @log = Logger.new(@logpath, 'daily')
+      @log.info "Watcher initialized with target directory: #{@watch_folder}"
       @log.info "Watcher will shutdown if you delete this keepalive file: #{@keepalive_file}"
     end
 
@@ -18,7 +21,7 @@ module Idrop
 
     def movies
       movies = []
-      Dir.glob(File.join(@watch_folder, '**/*.{mkv}')) do |path|
+      Dir.glob(File.join(@watch_folder, "**/*.{#{FILE_EXTENSIONS}}")) do |path|
         next if path.include? 'watcher' # shit sorry.
         movies << Movie.new(path)
         @log.info "Movie appears: #{path}"
@@ -27,6 +30,8 @@ module Idrop
     end
 
     def watch! &block
+      puts "Recursively watching #{@watch_folder} for #{FILE_EXTENSIONS} files"
+      puts "Logging to #{@logpath}"
       while keepalive? do
         movies.each do |movie|
           if movie.valid? && movie.ready_for_upload?

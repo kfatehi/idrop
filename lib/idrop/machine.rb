@@ -7,16 +7,26 @@ module Idrop
 
     attr_accessor :log
 
-    def initialize()
-      @hostname = "10.0.0.3"
-      @username = ""
-      @password = ""
-      @media_source_dir = "/Users/jeanreswanepoel/Drop/"
+    def initialize info
+      if info.nil?
+        raise InsufficientInformationError
+      elsif matches = info.match(/(.*)@(.*):(.*)/)
+        @username = matches[1]
+        @hostname = matches[2]
+        @remote_directory = matches[3]
+      elsif matches = info.match(/(.*)@(.*)/)
+        @username = matches[1]
+        @hostname = matches[2]
+      else
+        @username = `whoami`.strip
+        @hostname = info
+      end
+      @remote_directory ||= "~"
     end
 
     def upload movie
       @success = false
-      remote_file_path = File.join(@media_source_dir, movie.filename)
+      remote_file_path = File.join(@remote_directory, movie.filename)
       secure_shell do |ssh|
         @log.info "Now uploading #{movie.filename} to #{remote_file_path}."
 
@@ -40,6 +50,10 @@ module Idrop
         ssh.exec!("rm '#{remote_file_path}'")
         @success = false
       end
+    end
+
+    def to_s
+      "#{@username}@#{@hostname}:#{@remote_directory}"
     end
   end
 end

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Keyvan Fatehi", "Jeanre Swanepoel"]
   spec.email         = ["keyvanfatehi@gmail.com", "jeanre.swanepoel@gmail.com"]
   spec.description   = %q{for mkv appearing in a folder, it converts to mp4, transfers with scp, and deletes}
-  spec.summary       = %q{for mkv appearing in a folder, it converts to mp4, transfers with scp, and deletes}
+  spec.summary       = %q{mkv to mp4 to scp}
   spec.homepage      = ""
   spec.license       = "MIT"
 

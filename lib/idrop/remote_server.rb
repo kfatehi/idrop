@@ -6,20 +6,19 @@ module Idrop
       end
 
       def secure_shell &block
-        ssh = Net::SSH.start(@hostname, @username, :password => @password)
+        ssh = Net::SSH.start(@hostname, @username)
         yield ssh
       rescue => ex
         @log.error ex.message
         @log.error ex.backtrace.join("\n")
-        @log.error "Unable to connect to #{@hostname} using #{@username}/#{@password}"
+        @log.error "Unable to connect to #{@hostname} using #{@username}"
       ensure
         ssh.close
       end
 
       def scp local_path, remote_path
         Net::SCP.upload!(@hostname, @username,
-          local_path, remote_path,
-          :password => @password)
+          local_path, remote_path)
       end
     end
 

@@ -1,6 +1,6 @@
 # Idrop
 
-TODO: Write a gem description
+watch folder -> [ mkv -> mp4 ] -> scp -> destination
 
 ## Installation
 
@@ -18,7 +18,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+`idrop help watch` to learn more
+
+## Example
+
+```
+$ idrop watch -s here -d keyvan@there:in_here
+Destination is set to keyvan@there:in_here. Make sure you can scp files there...
+Recursively watching /Users/keyvan/Code/eyedrop/idrop/here for mkv files
+Logging to /Users/keyvan/here/watcher/log/watcher.log
+```
 
 ## Contributing
 
