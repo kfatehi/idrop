@@ -7,6 +7,7 @@ module Idrop
     option :username => :required
     option :password => :required
     def watch
+      require 'idrop/app'
       Idrop::App.start
     end
   end
