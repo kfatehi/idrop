@@ -4,6 +4,10 @@
 
 watch folder -> [ mkv -> mp4 ] -> scp -> destination
 
+the conversion can happen in different ways, depending on which Idrop::Transcoder class you decide to use
+
+the one we've built first is the most complicated answer here: http://askubuntu.com/questions/50433/how-to-convert-mkv-file-into-mp4-file-losslessly
+
 ## Installation
 
 Add this line to your application's Gemfile:
