@@ -9,7 +9,7 @@ module Idrop
       puts "Destination is set to #{mac}. Make sure you can scp files there..."
       transcoder.log = mac.log = watcher.log
       watcher.watch! do |movie|
-        transcoder.perform(movie)
+        transcoder.perform(movie, remove_original: false)
         mac.upload(movie)
       end
     end

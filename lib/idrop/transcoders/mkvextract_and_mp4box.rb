@@ -4,7 +4,7 @@ require 'fileutils'
 module Idrop
   module Transcoders
     ##
-    # A transcoder class that repackages h264 mkv's as mp4
+    # A transcoder class that repackages h264/ac3 mkv's as mp4
     # Depends on mkvtoolnix
     # Mac: brew install mkvtoolnix MP4Box
     class MkvExtractAndMp4Box < Base
@@ -13,15 +13,21 @@ module Idrop
         super
       end
 
-      def perform(movie)
+      def perform(movie, opts)
         @dir = File.dirname(movie.filepath)
+        require 'pry'
+        binding.pry
         inspect movie.filepath
         extract movie.filepath
-        @pending_delete = movie.filepath.clone
+        @original_mkv = movie.filepath.clone
         movie.filename = movie.filename.gsub('.mkv', '.mp4')
         movie.filepath = File.join(@dir, movie.filename)
         box movie.filepath
         cleanup
+        if opts[:remove_original]
+          @log.info "Removing original mkv"
+          FileUtils.rm @original_mkv
+        end
       end
 
       private
@@ -31,7 +37,12 @@ module Idrop
         info = `mkvmerge --identify '#{filepath}'`
         info.split("\n").select{|l| l.match(/Track/)}.map do |line|
           track = line.match(/ID (\d): (\w+)/)
-          @tracks[track[1]] = File.join(@dir, track[2])
+          case track[2]
+          when 'video'
+            @tracks[track[1]] = File.join(@dir, 'video.h264')
+          when 'audio'
+            @tracks[track[1]] = File.join(@dir, 'audio.ac3')
+          end
         end
       end
 
@@ -52,8 +63,6 @@ module Idrop
           @log.info "Removing #{File.basename(track)} track"
           FileUtils.rm track
         end
-        @log.info "[Not] Removing original mkv"
-        # `rm #{@pending_delete}`
       end
     end
   end
